@@ -1,0 +1,14 @@
+package com.badlogic.gdx.graphics.g2d.svg.elements;
+
+public class SVGElementEllipse extends SVGElementCircle{
+
+
+	public SVGElementEllipse() {
+		this(0d,0d,0d);
+	}
+	
+	public SVGElementEllipse(double cx, double cy, double raio) {
+		super("ellipse", cx, cy, raio);
+	}
+	
+}
