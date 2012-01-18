@@ -14,8 +14,6 @@ public class SVGMetaData {
 	
 	private void parse(SVGElement element){
 		
-		next(element);
-		
 		//Styles inLine
 		String styleInLine = element.getStyleInLine();
 		
@@ -56,6 +54,7 @@ public class SVGMetaData {
 			}
 		}
 		
+		next(element);
 	}
 	
 	
