@@ -46,7 +46,7 @@ public class ParseUtils implements SVGConstants{
 	
 	public static SVGPath[] extractPathMetadata(String property) {
 		property = property.replaceAll("([MmAaCcSsLlHhVvQqTtZz])",",$1,");    
-		property = property.replaceAll("-",",-");
+		property = property.replaceAll("[^eE]-",",-");
 		property = property.replaceAll("\\s+",",");
 		property = property.replaceAll(",{2,}",",");
 		property = property.replaceAll("^,", "");
@@ -91,14 +91,7 @@ public class ParseUtils implements SVGConstants{
 		
 		return retorno;
 	}
-	
-	private static boolean isScientificNotation(String value){
-		return value.matches("[e]");  
-	}
-	
-	public static void main(String[] args) {
-		System.out.println(isScientificNotation("12e-3"));
-	}
+
 	private static boolean isCharacter(String value){
 		return value.matches("[a-zA-Z]{1}");  
 	}
