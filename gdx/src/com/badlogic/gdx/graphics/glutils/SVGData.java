@@ -84,7 +84,11 @@ public class SVGData implements Disposable, SVGConstants {
 							scale(path, scaleX, scaleY);
 							
 						}else if ( ATTRIBUTE_TRANSFORM_VALUE_TRANSLATE.equals(transform.name ) ){
-							translate(path,transform.values[0],transform.values[1]);
+							if ( transform.values.length == 2 ){
+								translate(path,transform.values[0],transform.values[1]);
+							}else{
+								translate(path,transform.values[0],0);
+							}
 						}else if ( ATTRIBUTE_TRANSFORM_VALUE_MATRIX.equals(transform.name ) ){
 							matrix(path,transform.values[0],transform.values[1],transform.values[2],transform.values[3],transform.values[4],transform.values[5]);
 						}
