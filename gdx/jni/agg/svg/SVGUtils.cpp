@@ -172,31 +172,38 @@ namespace svg
 	}
 
 	rgba8 utils::parse_color(const char* str){
-		while(*str == ' ') ++str;
-		unsigned c = 0;
-		if(*str == '#')
-		{
-			sscanf(str + 1, "%x", &c);
-			return rgb8_packed(c);
-		}
-		else
-		{
-			named_color c;
+		if ( strncmp (str, "rgb", 3) == 0){
+			unsigned r, g, b = 0;
 
-			strcpy(c.name, str);
+			sscanf(str, "rgb(%d,%d,%d)", &r, &g, &b);
 
-			const void* p = bsearch(&c,
-									colors,
-									sizeof(colors) / sizeof(colors[0]),
-									sizeof(colors[0]),
-									cmp_color);
+			return rgba8(r, g, b, 255);
+		}else{
+			while(*str == ' ') ++str;
+			unsigned c = 0;
+			if(*str == '#')
+			{
+				sscanf(str + 1, "%x", &c);
+				return rgb8_packed(c);
+			}
+			else
+			{
+				named_color c;
 
-			const named_color* pc = (const named_color*)p;
+				strcpy(c.name, str);
 
-			return rgba8(pc->r, pc->g, pc->b, pc->a);
+				const void* p = bsearch(&c,
+										colors,
+										sizeof(colors) / sizeof(colors[0]),
+										sizeof(colors[0]),
+										cmp_color);
+
+				const named_color* pc = (const named_color*)p;
+
+				return rgba8(pc->r, pc->g, pc->b, pc->a);
+			}
 		}
 	}
-
 
 }
 }
