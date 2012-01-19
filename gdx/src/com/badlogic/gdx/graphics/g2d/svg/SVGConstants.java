@@ -8,7 +8,7 @@ public interface SVGConstants {
 
 	public static final String TAG_SVG 							 = "svg";
 	public static final String TAG_TITLE 						 = "title";
-	public static final String TAG_DEFS 						 = "defs";
+	public static final String TAG_USE	 						 = "use";
 	public static final String TAG_LINEARGRADIENT 				 = "linearGradient";
 	public static final String TAG_RADIALGRADIENT 				 = "radialGradient";
 	public static final String TAG_FILTER 						 = "filter";
@@ -16,6 +16,8 @@ public interface SVGConstants {
 	public static final String TAG_STOP 						 = "stop";
 
 	public static final String TAG_GROUP 						 = "g";
+
+	public static final String TAG_DEFS						 	 = "defs";
 
 	public static final String TAG_CIRCLE 						 = "circle";
 	public static final String TAG_ELLIPSE 						 = "ellipse";
