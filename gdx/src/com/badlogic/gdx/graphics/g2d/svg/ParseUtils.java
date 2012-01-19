@@ -190,9 +190,7 @@ public class ParseUtils implements SVGConstants{
 	
 	public static SVGStyle[] concatenateStyle(SVGStyle[] style1, SVGStyle[] style2) {
 		
-		if ( style1 == null || style1.length == 0 ){
-			return style2;
-		}else if ( style2 == null || style2.length == 0 ){
+		if ( style2 == null || style2.length == 0 ){
 			return style1;
 		}
 		
@@ -207,4 +205,20 @@ public class ParseUtils implements SVGConstants{
 		return ret;
 	}
 	
+	public static SVGTransform[] concatenateTransform(SVGTransform[] transform1, SVGTransform[] transform2) {
+		
+		if ( transform2 == null || transform2.length == 0 ){
+			return transform1;
+		}
+		
+		int trans1Lenght = transform1.length;
+		int trans2Lenght = transform2.length;
+		
+		SVGTransform[] ret = new SVGTransform[trans1Lenght + trans2Lenght];
+		
+		System.arraycopy(transform1, 0, ret, 0, trans1Lenght);
+		System.arraycopy(transform2, 0, ret, trans1Lenght, trans2Lenght);
+		
+		return ret;
+	}
 }
