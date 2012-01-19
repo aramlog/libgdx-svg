@@ -24,8 +24,6 @@ public class SVGParse implements SVGConstants{
 		this.file = file;
 	}
 	
-	//TODO implementar url
-	//TODO length ::= number (~"em" | ~"ex" | ~"px" | ~"in" | ~"cm" | ~"mm" | ~"pt" | ~"pc")?
 	public void parse(SVGRootElement root){
 		
 		final Stack<SVGElement> stack    = new Stack<SVGElement>();
@@ -72,9 +70,13 @@ public class SVGParse implements SVGConstants{
 						
 						element = new SVGElementPath();
 						
-					} else if ( name.equals(TAG_GROUP) ){
+					} else if(name.equals(TAG_USE)) {
 						
-						element = new SVGElement(TAG_GROUP);
+						element = new SVGElement(TAG_USE);
+						
+					} else if ( name.equals(TAG_GROUP) || name.equals(TAG_DEFS) ){
+						
+						element = new SVGElement(name);
 						
 						currentRoot.addChild(element);
 						
@@ -106,6 +108,10 @@ public class SVGParse implements SVGConstants{
 					}else if ( name.equals(ATTRIBUTE_STYLE) ){
 						
 						element.setStyle(ParseUtils.extractStyleProperty(value));
+						
+					}else if ( name.endsWith(ATTRIBUTE_HREF) ){
+						
+						element.sethRef(value);
 						
 					}else if ( name.equals(ATTRIBUTE_TRANSFORM)){
 						
@@ -142,13 +148,15 @@ public class SVGParse implements SVGConstants{
 				
 				@Override
 				protected void close () {
-						
+					
+					String currentElement =  currElement.pop();
+					
 					if ( element != null && !TAG_GROUP.equals(element.getName()) ){
 						currentRoot.addChild(element);
 						element = null;
 					}
 					
-					if ( currElement.pop().equals(TAG_GROUP) ){
+					if ( TAG_GROUP.equals(currentElement) || TAG_DEFS.equals(currentElement) ){
 						stack.pop();
 						currentRoot = stack.lastElement();
 					}
