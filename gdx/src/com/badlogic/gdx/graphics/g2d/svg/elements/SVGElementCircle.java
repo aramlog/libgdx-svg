@@ -31,4 +31,9 @@ public class SVGElementCircle extends SVGElement{
 			raio = value;
 		}
 	}
+	
+	@Override
+	public SVGElement deepCopy(){
+		return super.deepCopy(new SVGElementCircle(cx, cy, raio));
+	}
 }
