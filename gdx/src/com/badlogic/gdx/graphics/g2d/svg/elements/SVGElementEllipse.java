@@ -11,4 +11,9 @@ public class SVGElementEllipse extends SVGElementCircle{
 		super("ellipse", cx, cy, raio);
 	}
 	
+	
+	@Override
+	public SVGElement deepCopy(){
+		return super.deepCopy(new SVGElementEllipse(cx, cy, raio));
+	}
 }

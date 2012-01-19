@@ -18,6 +18,7 @@ public class SVGElementRect extends SVGElement{
 		this.x 		= x;
 		this.y 		= y;
 		this.width  = width;
+		this.height = height;
 		this.rx 	= rx;
 		this.ry 	= ry;
 	}
@@ -37,5 +38,10 @@ public class SVGElementRect extends SVGElement{
 		}else if ( "ry".equals(attribute) ){
 			ry = value;
 		}
+	}
+	
+	@Override
+	public SVGElement deepCopy(){
+		return super.deepCopy(new SVGElementRect(x, y, width, height, rx, ry));
 	}
 }

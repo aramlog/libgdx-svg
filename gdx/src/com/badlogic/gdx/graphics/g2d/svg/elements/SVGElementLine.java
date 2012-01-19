@@ -32,4 +32,9 @@ public class SVGElementLine extends SVGElement{
 		}
 	}
 	
+	@Override
+	public SVGElement deepCopy(){
+		return super.deepCopy(new SVGElementLine(x1, y1, x2, y2));
+	}
+	
 }
