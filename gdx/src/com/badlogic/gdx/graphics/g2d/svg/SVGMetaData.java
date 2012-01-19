@@ -5,9 +5,18 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.g2d.svg.elements.SVGElement;
 import com.badlogic.gdx.graphics.g2d.svg.elements.SVGRootElement;
 
-public class SVGMetaData {
+public class SVGMetaData implements SVGConstants{
+	
+	private ArrayList<SVGElement> defs;
 	
 	public SVGMetaData(SVGRootElement rootElement){
+		this(rootElement, 10);
+	}
+	
+	public SVGMetaData(SVGRootElement rootElement, int maxDefs){
+		if ( defs != null ){
+			defs = new ArrayList<SVGElement>(maxDefs);
+		}
 		parse(rootElement);
 		end();
 	}
@@ -34,29 +43,56 @@ public class SVGMetaData {
 				}
 		}
 		
-		ArrayList<SVGElement> childs = element.getChild();
-		
-		if ( childs != null ){
-			int lenght = childs.size();
+		if ( !element.equals(TAG_DEFS) ){
 			
-			for ( int x=0; x<lenght; x++ ){
-				SVGElement child = childs.get(x); 
+			ArrayList<SVGElement> childs = element.getChild();
+			
+			if ( childs != null ){
+				int length = childs.size();
 				
-				if ( element.getStyle() != null && element.getStyle().length > 0 ){
-					child.setStyle(ParseUtils.concatenateStyle(element.getStyle(), child.getStyle()));
+				for ( int x=0; x<length; x++ ){
+					SVGElement child = childs.get(x); 
+					
+					copyStyle(child, element);
+					
+					copyTransform(child, element);
+					
+					parse(child);
 				}
-				
-				if ( element.getTransforms() != null && element.getTransforms().length > 0 ){
-					child.setTransforms(concatenateTransform(element.getTransforms(), child.getTransforms()));
-				}
-				
-				parse(child);
 			}
+			
+			if ( element.equals(TAG_USE) ){
+				SVGElement refElement = getDefs(element.gethRef());
+				
+				SVGElement deepCopy   = refElement.deepCopy();
+				
+				copyStyle(deepCopy, element);
+				
+				copyTransform(deepCopy, element);
+				
+				parse(deepCopy);
+				
+			}else{
+				next(element);
+			}
+			
+		}else{
+			defs = element.getChild();
 		}
 		
-		next(element);
 	}
 	
+	private void copyStyle(SVGElement dest, SVGElement org){
+		if ( org.getStyle() != null && org.getStyle().length > 0 ){
+			dest.setStyle(ParseUtils.concatenateStyle(org.getStyle(), dest.getStyle()));
+		}
+	}
+
+	private void copyTransform(SVGElement dest, SVGElement org){
+		if ( org.getTransforms() != null && org.getTransforms().length > 0 ){
+			dest.setTransforms(ParseUtils.concatenateTransform(org.getTransforms(), dest.getTransforms()));
+		}
+	}
 	
 	public void next(SVGElement element){
 	}
@@ -65,23 +101,17 @@ public class SVGMetaData {
 		
 	}
 	
-	private SVGTransform[] concatenateTransform(SVGTransform[] transform1, SVGTransform[] transform2) {
+	private SVGElement getDefs(String hRef){
+		int length = defs.size();
 		
-		if ( transform1 == null || transform1.length == 0 ){
-			return transform2;
-		}else if ( transform2 == null || transform2.length == 0 ){
-			return transform1;
+		for ( int x=0; x<length; x++ ){
+			SVGElement element = defs.get(x);
+			if ( hRef.equals(element.getId()) ){
+				return element;
+			}
 		}
 		
-		int trans1Lenght = transform1.length;
-		int trans2Lenght = transform2.length;
-		
-		SVGTransform[] ret = new SVGTransform[trans1Lenght + trans2Lenght];
-		
-		System.arraycopy(transform1, 0, ret, 0, trans1Lenght);
-		System.arraycopy(transform2, 0, ret, trans1Lenght, trans2Lenght);
-		
-		return ret;
+		return null;
 	}
 	
 }
