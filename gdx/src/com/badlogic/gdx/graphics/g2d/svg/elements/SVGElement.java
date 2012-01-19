@@ -6,15 +6,16 @@ import com.badlogic.gdx.graphics.g2d.svg.SVGStyle;
 import com.badlogic.gdx.graphics.g2d.svg.SVGTransform;
 import com.badlogic.gdx.utils.Array;
 
-public class SVGElement {
+public class SVGElement{
 	
-	private String 	 name;
-	private String 	 id;
-	private SVGStyle[] style; 
-	private SVGTransform[] transforms; 
-	private StringBuilder styleInline;
+	private String 	 		name;
+	private String 	 		id;
+	private String 	 		hRef;
+	private SVGStyle[] 		style; 
+	private SVGTransform[]  transforms; 
+	private StringBuilder   styleInline;
 	
-	private ArrayList<SVGElement> child;
+	protected ArrayList<SVGElement> child;
 	
 	public SVGElement(String name){
 		this.name=name;
@@ -34,6 +35,20 @@ public class SVGElement {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public String gethRef() {
+		return hRef;
+	}
+
+	public void sethRef(String hRef) {
+		if ( hRef != null ){
+		   if ( hRef.startsWith("#") ){	
+			   this.hRef = hRef.substring(1);//#link
+		   }else{
+			   this.hRef = hRef;
+		   }
+		}
 	}
 
 	public SVGStyle[] getStyle() {
@@ -63,6 +78,10 @@ public class SVGElement {
 		styleInline.append(key).append(":").append(value);
 	}
 	
+	public void setStyleInline(StringBuilder styleInline){
+		this.styleInline=styleInline;
+	}
+	
 	public String getStyleInLine(){
 		return styleInline != null ? styleInline.toString() : null;
 	}
@@ -82,5 +101,35 @@ public class SVGElement {
 	public boolean equals(Object value){
 		return name.equals(value);
 	}
-
+	
+	public SVGElement deepCopy(){
+		return deepCopy(new SVGElement(name));
+	}
+	
+	public SVGElement deepCopy(SVGElement element){
+		element.setId(id);
+		element.sethRef(hRef);
+		element.setStyleInline(styleInline);
+		
+		if ( style != null ){
+			SVGStyle[] styleCopy = new SVGStyle[style.length];
+			System.arraycopy(style, 0, styleCopy, 0, style.length);
+			element.setStyle(styleCopy);
+		}
+		
+		if ( transforms != null ){
+			SVGTransform[] transformCopy = new SVGTransform[transforms.length];
+			System.arraycopy(transforms, 0, transformCopy, 0, transforms.length);
+			element.setTransforms(transformCopy);
+		}
+		
+		if ( child != null ){
+			int length = child.size();
+			for ( int x=0; x<length; x++){
+				element.addChild(child.get(x).deepCopy());
+			}
+		}
+		
+		return element;
+	}
 }
