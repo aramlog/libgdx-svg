@@ -1,0 +1,1 @@
+libgdx com suporte a svg
